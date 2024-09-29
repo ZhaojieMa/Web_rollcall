@@ -1,0 +1,210 @@
+<!--需更改：更改积分的时候可以直接更改students里相应学生的积分值，而不是先更改selectedStudent的分-->>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机点名系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>随机点名系统</h1>
+        <input type="file" id="fileInput" />
+        <button id="uploadButton" onclick="uploadFile()">导入学生名单</button>
+        <button onclick="viewStudentList()">查看学生名单</button>
+        <button id="drawButton" onclick="startDraw()" disabled>开始点名</button>
+        <div id="scrollingNames"></div>
+        <div id="selectedStudent"></div>
+        <h2>积分管理</h2>
+        <button id="correctButton" onclick="repeatCorrectly()" disabled>准确重复问题</button>
+        <button id="incorrectButton" onclick="repeatIncorrectly()" disabled>重复不准确</button>
+        <input type="text" id="manualPoints" placeholder="手动加减积分 (范围 0.5 到 3)" />
+        <button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>
+        <button id="resetButton" onclick="resetAllPoints()">重置所有积分</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <script>
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let selectedStudent = null;
+        let intervalId;
+        let lock = false;//自动加分锁
+        let lock1 = false;//手动加分锁
+        let autoPointsAdded = false;
+        let manualPointsUsed = false;
+        let studentDrawn = false;
+
+        window.onload = function() {
+            const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent
+            if (storedStudent) {
+                selectedStudent = JSON.parse(storedStudent);
+                document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
+                autoPointsAdded = localStorage.getItem('autoPointsAdded') === 'true';
+                manualPointsUsed = localStorage.getItem('manualPointsUsed') === 'true';
+            }
+            toggleButtons();//按键锁
+        };
+    
+        function uploadFile() {
+            const input = document.getElementById('fileInput');
+            const file = input.files[0];
+            if (!file) {
+                alert("请选择一个文件！");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                students = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                students = students.slice(1).map(row => ({
+                    id: row[0],
+                    name: row[1],
+                    points: 0
+                }));
+                localStorage.setItem('students', JSON.stringify(students));
+                alert("学生名单导入成功！");
+                toggleButtons();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function toggleButtons() {
+            const buttons = ['drawButton', 'correctButton', 'incorrectButton', 'manualButton'];
+            const enable = students.length > 0;
+            buttons.forEach(buttonId => {
+                document.getElementById(buttonId).disabled = !enable;
+            });
+        }
+
+        function viewStudentList() {
+            window.location.href = 'studentList.html';
+        }
+
+        function startDraw() {
+            if (students.length === 0) {
+                alert("请先导入学生名单！");
+                return;
+            }
+            lock = false;
+            lock1 = false;
+            autoPointsAdded = false;
+            manualPointsUsed = false;
+
+            const totalPoints = students.reduce((sum, student) => sum + Math.max(1, 10 - student.points), 0);
+            const randomValue = Math.random() * totalPoints;
+            let cumulativePoints = 0;
+
+            for (const student of students) {
+                cumulativePoints += Math.max(1, 10 - student.points);
+                if (randomValue < cumulativePoints) {
+                    selectedStudent = student;
+                    break;
+                }
+            }
+
+            scrollStudents();
+        }
+
+        function synPoints() {
+            // 更新 students 数组中的相应学生积分  
+            const studentIndex = students.findIndex(s => s.id === selectedStudent.id);  
+            if (studentIndex !== -1) {  
+                students[studentIndex].points = selectedStudent.points;  // 确保 students 数组中的积分也更新  
+            }
+        }
+
+        function repeatCorrectly() {
+            if (!lock && selectedStudent && !autoPointsAdded) {
+                selectedStudent.points += 0.5;
+                synPoints();
+                autoPointsAdded = true;
+                lock = true;
+                updateLocalStorage();
+                alert(`已为 ${selectedStudent.name}加分 0.5。`);  
+            } else if (!selectedStudent) {
+                alert("请先抽取一位学生");
+            } else {
+                alert("已为该学生加过分");
+            }
+        }
+
+
+        function repeatIncorrectly() {
+            if (!lock && selectedStudent && !autoPointsAdded) {
+                selectedStudent.points -= 1;
+                synPoints();
+                autoPointsAdded = true;
+                lock = true;
+                updateLocalStorage();
+                alert(`已为 ${selectedStudent.name} 扣分 1。`);
+            } else if (!selectedStudent) {
+                alert("请先抽取一位学生");
+            } else {
+                alert("已为该学生加过分");
+            }
+        }
+
+
+        function scrollStudents() {
+            document.getElementById('selectedStudent').innerText = '';
+            const scrollingNamesDiv = document.getElementById('scrollingNames');
+            scrollingNamesDiv.innerHTML = '';
+            let index = 0;
+
+            intervalId = setInterval(() => {
+                scrollingNamesDiv.innerText = students[index].name;
+                index = (index + 1) % students.length;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(intervalId);
+                scrollingNamesDiv.innerHTML = '';
+                if (selectedStudent) {
+                    document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
+                    selectedStudent.points += 1;
+                    updateLocalStorage();
+                }
+            }, 3000);
+        }
+
+        function updateLocalStorage() {
+            localStorage.setItem('selectedStudent', JSON.stringify(selectedStudent));
+            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.setItem('autoPointsAdded', autoPointsAdded);
+            localStorage.setItem('manualPointsUsed', manualPointsUsed);
+        }
+
+        function updatePoints() {
+            const points = parseFloat(document.getElementById('manualPoints').value);
+            if (isNaN(points) || points < 0.5 || points > 3) {
+                alert("请输入有效的积分值（范围 0.5 到 3）");
+                return;
+            }
+            if (selectedStudent && !manualPointsUsed) {
+                selectedStudent.points += points;
+                synPoints();
+                document.getElementById('manualPoints').value = '';
+                manualPointsUsed = true;
+                updateLocalStorage();
+                alert(`已为 ${selectedStudent.name} 加分 ${points}。`);
+            } else if (!selectedStudent) {
+                alert("请先点名一个学生。");
+            } else {
+                alert("不可重复使用手动加分");
+            }
+        }
+
+        function resetAllPoints() {
+            students.forEach(student => student.points = 0);
+            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.removeItem('selectedStudent');
+            selectedStudent = null;
+            document.getElementById('selectedStudent').innerText = '';
+            alert("所有积分已重置！");
+        }
+    </script>
+</body>
+</html>

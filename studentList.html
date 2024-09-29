@@ -1,0 +1,93 @@
+<!DOCTYPE html>  
+<html lang="zh">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>学生名单</title>  
+    <link rel="stylesheet" href="styles.css">  
+    <style>  
+        body {  
+            text-align: center;  
+            position: relative; /* 为绝对定位的子元素提供基准 */  
+        }  
+
+        /* 将按钮容器放在右上角 */  
+        .button-container {  
+            position: absolute;  
+            top: 20px;  
+            right: 20px;  
+        }  
+
+        /* 按钮样式 */  
+        .button-container button {  
+            margin-left: 10px; /* 按钮之间留一点间隔 */  
+        }  
+    </style>  
+</head>  
+<body>  
+    <h1>学生名单</h1>  
+    <div id="studentList"></div>  
+
+    <div class="button-container">  
+        <button onclick="resetAllPoints()">一键清除所有积分</button>  
+        <button onclick="goBack()">返回</button>  
+    </div>  
+
+    <script>  
+        // 返回上一页  
+        function goBack() {  
+            window.history.back();  
+        }  
+
+        // 加载学生名单  
+        function loadStudentList() {  
+            const students = JSON.parse(localStorage.getItem('students')) || [];  
+            const list = document.getElementById('studentList');  
+            list.innerHTML = '';  
+
+            if (students.length === 0) {  
+                list.innerHTML = '<div>尚未导入任何学生名单。</div>';  
+                return;  
+            }  
+
+            students.forEach((student, index) => {  
+                list.innerHTML += `  
+                    <div>  
+                        ${student.id} - ${student.name} - 积分: ${student.points}  
+                        <button onclick="clearStudentPoints(${index})">清除积分</button>  
+                        <button onclick="deleteStudent(${index})">删除</button>  
+                    </div>`;  
+            });  
+        }  
+
+        // 清除单个学生积分  
+        function clearStudentPoints(index) {  
+            const students = JSON.parse(localStorage.getItem('students')) || [];  
+            students[index].points = 0; // 清除该学生的积分  
+            localStorage.setItem('students', JSON.stringify(students)); // 更新本地存储  
+            loadStudentList(); // 重新加载学生列表  
+            alert("已清除该学生积分。");  
+        }  
+
+        // 删除单个学生  
+        function deleteStudent(index) {  
+            let students = JSON.parse(localStorage.getItem('students')) || [];  
+            students.splice(index, 1); // 删除该学生  
+            localStorage.setItem('students', JSON.stringify(students)); // 更新本地存储  
+            loadStudentList(); // 重新加载学生列表  
+            alert("已删除该学生。");  
+        }                                                                               
+
+        // 一键清除所有学生的积分  
+        function resetAllPoints() {  
+            let students = JSON.parse(localStorage.getItem('students')) || [];  
+            students.forEach(student => student.points = 0); // 清除所有学生的积分  
+            localStorage.setItem('students', JSON.stringify(students)); // 更新本地存储  
+            loadStudentList(); // 重新加载学生列表  
+            alert("所有学生的积分已清除。");  
+        }  
+
+        window.onload = loadStudentList; // 页面加载时调用  
+    </script>  
+</body>  
+</html>
