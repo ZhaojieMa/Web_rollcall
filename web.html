@@ -8,21 +8,44 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>随机点名系统</h1>
-        <input type="file" id="fileInput" />
-        <button id="uploadButton" onclick="uploadFile()">导入学生名单</button>
-        <button onclick="viewStudentList()">查看学生名单</button>
-        <button id="drawButton" onclick="startDraw()" disabled>开始点名</button>
-        <div id="scrollingNames"></div>
-        <div id="selectedStudent"></div>
-        <h2>积分管理</h2>
-        <button id="correctButton" onclick="repeatCorrectly()" disabled>准确重复问题</button>
-        <button id="incorrectButton" onclick="repeatIncorrectly()" disabled>重复不准确</button>
-        <input type="text" id="manualPoints" placeholder="手动加减积分 (范围 0.5 到 3)" />
-        <button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>
-        <button id="resetButton" onclick="resetAllPoints()">重置所有积分</button>
-    </div>
+    <div class="container">  
+        <h1>随机点名系统</h1>  
+        <div class="file-upload">  
+            <label class="file-label">  
+                <input type="file" id="fileInput" onchange="updateFileName()" />  
+                选择文件  
+            </label>  
+            <span id="fileName">未选择文件</span>  
+            <button id="uploadButton" class="btn" onclick="uploadFile()">导入</button>  
+        </div>  
+    
+        <div class="button-row">  
+            <button id="drawButton" onclick="startDraw()" disabled>开始点名</button>  
+        </div>  
+    
+        <div id="scrollingNames"></div>  
+        <div id="selectedStudent"></div> 
+
+        <div class="button-row">
+        <button id="onClass" style="width:20% ;">到场</button>  
+        </div>
+    
+        <div class="button-row">  
+            <button id="correctButton" onclick="repeatCorrectly()" disabled>准确重复问题</button>
+            <button id="incorrectButton" onclick="repeatIncorrectly()" disabled>重复不准确</button>  
+        </div>  
+        
+        <input type="text" id="manualPoints" placeholder="手动加减积分 (范围 0.5 到 3)" />  
+        
+        <div class="button-row">  
+            <button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>  
+            <button id="resetButton" onclick="resetAllPoints()">重置所有积分</button>  
+        </div>  
+    
+        <div class="view-student-row">  
+            <button onclick="viewStudentList()">查看学生名单</button>  
+        </div>  
+    </div> 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
@@ -94,6 +117,16 @@
             reader.readAsArrayBuffer(file);  
         }
 
+        function updateFileName() {  
+            const input = document.getElementById('fileInput');  
+            const fileName = document.getElementById('fileName');  
+            if (input.files.length > 0) {  
+                fileName.innerText = input.files[0].name; // 显示选择的文件名  
+            } else {  
+                fileName.innerText = '未选择文件'; // 显示未选择文件的提示  
+            }  
+        } 
+
         function toggleButtons() {
             const buttons = ['drawButton', 'correctButton', 'incorrectButton', 'manualButton'];
             const enable = students.length > 0;
@@ -111,6 +144,9 @@
                 alert("请先导入学生名单！");
                 return;
             }
+            // 隐藏“开始点名”按钮
+            document.getElementById('drawButton').style.display = 'none';
+    
             lock = false;
             lock1 = false;
             autoPointsAdded = false;
@@ -130,6 +166,24 @@
 
             scrollStudents();
         }
+
+        document.addEventListener('click', function(event) {
+            const drawButton = document.getElementById('drawButton');
+            const scrollingNamesDiv = document.getElementById('scrollingNames');
+            const selectedStudentDiv = document.getElementById('selectedStudent');
+
+            // 检查点击事件是否发生在按钮或滚动区域之外
+            if (!drawButton.contains(event.target) && 
+                !scrollingNamesDiv.contains(event.target) && 
+                !selectedStudentDiv.contains(event.target)) {
+
+                // 清空显示的被点到学生信息
+                scrollingNamesDiv.innerHTML = '';
+
+                // 恢复“开始点名”按钮
+                drawButton.style.display = 'block';
+            }
+        });
 
         function synPoints() {
             // 更新 students 数组中的相应学生积分  
@@ -189,7 +243,7 @@
                     document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
                     selectedStudent.points += 1;
                     updateLocalStorage();
-                }
+                }  
             }, 3000);
         }
 
