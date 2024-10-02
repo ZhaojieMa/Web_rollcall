@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>随机点名系统</title>
     <link rel="stylesheet" href="styles.css">
+    <style>.hidden {
+        opacity: 0;
+        visibility: hidden;
+        -webkit-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+        -moz-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+        -o-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+        transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+    }</style>
 </head>
 <body>
     <div class="container">  
@@ -144,8 +152,10 @@
                 alert("请先导入学生名单！");
                 return;
             }
+            // 隐藏页面元素
+            document.querySelector('.container').classList.add('hidden');
             // 隐藏“开始点名”按钮
-            document.getElementById('drawButton').style.display = 'none';
+            //document.getElementById('drawButton').style.display = 'none';
     
             lock = false;
             lock1 = false;
@@ -167,7 +177,7 @@
             scrollStudents();
         }
 
-        document.addEventListener('click', function(event) {
+        /*document.addEventListener('click', function(event) {
             const drawButton = document.getElementById('drawButton');
             const scrollingNamesDiv = document.getElementById('scrollingNames');
             const selectedStudentDiv = document.getElementById('selectedStudent');
@@ -183,7 +193,7 @@
                 // 恢复“开始点名”按钮
                 drawButton.style.display = 'block';
             }
-        });
+        });*/
 
         function synPoints() {
             // 更新 students 数组中的相应学生积分  
