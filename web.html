@@ -1,4 +1,3 @@
-<!--需更改：更改积分的时候可以直接更改students里相应学生的积分值，而不是先更改selectedStudent的分-->>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +6,16 @@
     <title>随机点名系统</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css'>
     <link rel="stylesheet" href="styles.css">
-    <style>.hidden {
+    <style>
+    .hidden {
         opacity: 0;
         visibility: hidden;
         -webkit-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
         -moz-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
         -o-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
         transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-    }</style>
+    }
+    </style>
 </head>
 <body>
     <div class="container">  
@@ -44,28 +45,29 @@
             <button id="incorrectButton" onclick="repeatIncorrectly()" disabled>重复不准确</button>  
         </div>  
         
-        <input type="text" id="manualPoints" placeholder="手动加减积分 (范围 0.5 到 3)" />  
+        <div class="rating">
+            <input type="radio" name="rating" id="5" value="5" />
+            <label for="5" data-value="5"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">5</span></label>
+            <input type="radio" name="rating" id="4" value="4" />
+            <label for="4" data-value="4"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">4</span></label>
+            <input type="radio" name="rating" id="3" value="3" />
+            <label for="3" data-value="3"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">3</span></label>
+            <input type="radio" name="rating" id="2" value="2" />
+            <label for="2" data-value="2"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">2</span></label>
+            <input type="radio" name="rating" id="1" value="1" />
+            <label for="1" data-value="1"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">1</span></label>
+        </div>
+
+        <!--<input type="text" id="manualPoints" placeholder="手动加减积分 (范围 0.5 到 3)" />  -->
         
         <div class="button-row">  
-            <button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>  
+            <!--<button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>  -->
             <button id="resetButton" onclick="resetAllPoints()">重置所有积分</button>  
         </div>  
     
         <div class="view-student-row">  
             <button onclick="viewStudentList()">查看学生名单</button>  
         </div>  
-        <div class="rating">
-            <input type="radio" name="rating" id="5" value="5" />
-            <label for="5"><i class="icon ion-md-star-outline"></i></label>
-            <input type="radio" name="rating" id="4" value="4" />
-            <label for="4"><i class="icon ion-md-star-outline"></i></label>
-            <input type="radio" name="rating" id="3" value="3" />
-            <label for="3"><i class="icon ion-md-star-outline"></i></label>
-            <input type="radio" name="rating" id="2" value="2" />
-            <label for="2"><i class="icon ion-md-star-outline"></i></label>
-            <input type="radio" name="rating" id="1" value="1" />
-            <label for="1"><i class="icon ion-md-star-outline"></i></label>
-          </div>
     </div> 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
@@ -79,6 +81,20 @@
         let autoPointsAdded = false;
         let manualPointsUsed = false;
         let studentDrawn = false;
+
+        const stars = document.querySelectorAll('.rating label');
+
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', () => {
+                const number = star.querySelector('.star-number');
+                number.classList.remove('hidden');
+            });
+    
+            star.addEventListener('mouseleave', () => {
+                const number = star.querySelector('.star-number');
+                number.classList.add('hidden');
+            });
+        });
 
         window.onload = function() {
             const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent

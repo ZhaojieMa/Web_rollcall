@@ -21,8 +21,21 @@ body {
     height: 80rpx; /* 使容器填满整个视口 */
 }  
 
+.star-number {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 12px;
+    margin-top: -25px; /* 根据需要调整 */
+    margin-left: -10px; /* 根据需要调整 */
+    transition: opacity 0.3s;
+}
+
 .rating {
     display: flex;
+    justify-content: center;
     flex-direction: row-reverse;
     font-family: "Ionicons";
   }
