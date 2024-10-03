@@ -21,6 +21,10 @@ body {
     height: 80rpx; /* 使容器填满整个视口 */
 }  
 
+canvas {
+    border: 1px solid white;
+}
+
 .star-number {
     position: absolute;
     background: rgba(255, 255, 255, 0.8);
@@ -109,6 +113,11 @@ input[type="text"] {
     margin-top: 20px;  
     color: #007bff;  
     transition: transform 0.5s;  
+    /*脱离文档流居中*/
+    position: absolute;
+    top: 250px;
+    left: 50%; 
+    transform: translateX(-50%); /* 完全居中 */
 }  
 
 #studentList {  
@@ -169,7 +178,7 @@ input[type="text"] {
 .button-row {  
     display: flex;  
     justify-content: center; /* 按钮行居中 */  
-    margin: 10px 0;  
+    margin: 25px 0;  
 }  
 
 .view-student-row {  
@@ -186,4 +195,8 @@ input[type="text"] {
     text-align: center; /* 文本居中 */
     width: 100%; /* 确保占满父容器宽度 */
     overflow: hidden; /* 隐藏超出部分 */
+    position: absolute;
+    top: 250px;
+    left: 50%; 
+    transform: translateX(-50%); /* 完全居中 */
 }

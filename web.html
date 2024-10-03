@@ -17,7 +17,6 @@
     }
     </style>
 </head>
-<body>
     <div class="container">  
         <h1>随机点名系统</h1>  
         <div class="file-upload">  
@@ -32,9 +31,6 @@
         <div class="button-row">  
             <button id="drawButton" onclick="startDraw()" disabled>开始点名</button>  
         </div>  
-    
-        <div id="scrollingNames"></div>  
-        <div id="selectedStudent"></div> 
 
         <div class="button-row">
         <button id="onClass" onclick="onClass()" style="width:20% ;">到场</button>  
@@ -64,11 +60,16 @@
             <!--<button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>  -->
             <button id="resetButton" onclick="resetAllPoints()">重置所有积分</button>  
         </div>  
-    
+        
         <div class="view-student-row">  
             <button onclick="viewStudentList()">查看学生名单</button>  
         </div>  
     </div> 
+
+    <div id="scrollingNames"></div>  
+    <div id="selectedStudent">
+        <canvas id="particleCanvas"></canvas>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
@@ -95,6 +96,84 @@
                 number.classList.add('hidden');
             });
         });
+
+        const particleCanvas = document.getElementById('particleCanvas');
+        const particleCtx = particleCanvas.getContext('2d');
+        particleCanvas.width = document.getElementById('selectedStudent').clientWidth; // 根据父元素宽度设置
+        particleCanvas.height = document.getElementById('selectedStudent').clientHeight; // 根据父元素高度设置
+
+        let particles = [];
+
+        function createParticlesFromText(text) {
+            // 清空粒子画布
+            particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            particleCtx.font = 'bold 50px Arial';  // 字体大小可调整
+            particleCtx.fillStyle = '#003366';
+            const x = particleCanvas.width / 2 - particleCtx.measureText(text).width / 2;
+            const y = particleCanvas.height / 2;
+            particleCtx.fillText(text, x, y);
+
+            const imageData = particleCtx.getImageData(0, 0, particleCanvas.width, particleCanvas.height);
+            particles = []; // 清空之前的粒子
+            for (let y = 0; y < imageData.height; y += 2) {
+                for (let x = 0; x < imageData.width; x += 2) {
+                    const index = (y * imageData.width + x) * 4;
+                    const alpha = imageData.data[index + 3];
+                    if (alpha > 128) {  // 只选择不透明的像素
+                        let particle = new Particle(Math.random() * particleCanvas.width, Math.random() * particleCanvas.height);
+                        particle.targetX = x;
+                        particle.targetY = y;
+                        particles.push(particle);
+                    }
+                }
+            }
+            animateParticles();
+        }
+
+        function Particle(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = 2;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            this.density = Math.random() * 30 + 1;
+        }
+
+        Particle.prototype.draw = function () {
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);  // 绘制粒子
+            ctx.closePath();
+            ctx.fill();
+        };
+
+        Particle.prototype.update = function () {
+            let dx = this.targetX - this.x;
+            let dy = this.targetY - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            let speed = distance / 20;  // 移动速度，离目标越远速度越快
+            this.x += dx / distance * speed;
+            this.y += dy / distance * speed;
+
+            // 减少抖动，当粒子非常接近目标位置时停止移动
+            if (distance < 1) {
+                this.x = this.targetX;
+                this.y = this.targetY;
+            }
+        };
+
+        function animateParticles() {
+            particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);  // 清除上一帧的粒子
+
+            particles.forEach(particle => {
+                particle.update();  // 更新每个粒子的状态
+                particle.draw();    // 绘制每个粒子
+            });
+
+            requestAnimationFrame(animateParticles);  // 循环动画
+        }
+
+
 
         window.onload = function() {
             const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent
@@ -183,7 +262,7 @@
                 return;
             }
             // 隐藏页面元素
-            //document.querySelector('.container').classList.add('hidden');
+            document.querySelector('.container').classList.add('hidden');
             // 隐藏“开始点名”按钮
             //document.getElementById('drawButton').style.display = 'none';
     
@@ -205,7 +284,7 @@
                 }
             }
 
-            scrollStudents();
+            setTimeout(scrollStudents, 350);
         }
 
         function onClass() {
@@ -296,6 +375,7 @@
                 scrollingNamesDiv.innerHTML = '';
                 if (selectedStudent) {
                     document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
+                    createParticlesFromText(`被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`);
                     updateLocalStorage();
                 }  
             }, 3000);
