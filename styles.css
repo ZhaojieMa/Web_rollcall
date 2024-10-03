@@ -21,6 +21,46 @@ body {
     height: 80rpx; /* 使容器填满整个视口 */
 }  
 
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    font-family: "Ionicons";
+  }
+.rating input {
+    opacity: 0;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+  }
+.rating input:checked ~ label::before {
+    opacity: 1;
+}
+.rating label {
+    position: relative;
+    margin-right: 6px;
+    font-size: 5em;
+    color: gold;
+    cursor: pointer;
+    transition: 0.5s;
+}
+.rating label:hover {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+}
+.rating label::before {
+    position: absolute;
+    content: "\f384";
+    opacity: 0;
+    transition: 0.5s;
+}
+.rating label:hover::before, .rating label:hover ~ label::before {
+    opacity: 1 !important;
+}
+.rating:hover input:checked ~ label::before {
+    opacity: 0;
+}
+
+
 h1 {  
     text-align: left;  
     color: #333;
