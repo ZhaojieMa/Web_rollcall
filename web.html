@@ -6,17 +6,8 @@
     <title>随机点名系统</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css'>
     <link rel="stylesheet" href="styles.css">
-    <style>
-    .hidden {
-        opacity: 0;
-        visibility: hidden;
-        -webkit-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-        -moz-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-        -o-transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-        transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-    }
-    </style>
 </head>
+<body>
     <div class="container">  
         <h1>随机点名系统</h1>  
         <div class="file-upload">  
@@ -82,6 +73,7 @@
         let autoPointsAdded = false;
         let manualPointsUsed = false;
         let studentDrawn = false;
+        let starLock = false;
 
         const stars = document.querySelectorAll('.rating label');
 
@@ -99,8 +91,8 @@
 
         const particleCanvas = document.getElementById('particleCanvas');
         const particleCtx = particleCanvas.getContext('2d');
-        particleCanvas.width = document.getElementById('selectedStudent').clientWidth; // 根据父元素宽度设置
-        particleCanvas.height = document.getElementById('selectedStudent').clientHeight; // 根据父元素高度设置
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
 
         let particles = [];
 
@@ -140,11 +132,11 @@
         }
 
         Particle.prototype.draw = function () {
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);  // 绘制粒子
-            ctx.closePath();
-            ctx.fill();
+            particleCtx.fillStyle = 'black';
+            particleCtx.beginPath();
+            particleCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);  // 绘制粒子
+            particleCtx.closePath();
+            particleCtx.fill();
         };
 
         Particle.prototype.update = function () {
@@ -271,6 +263,8 @@
             onClassAdded = false;
             autoPointsAdded = false;
             manualPointsUsed = false;
+            starLock = false;
+
 
             const totalPoints = students.reduce((sum, student) => sum + Math.max(1, 10 - student.points), 0);
             const randomValue = Math.random() * totalPoints;
@@ -386,27 +380,52 @@
             localStorage.setItem('students', JSON.stringify(students));
             localStorage.setItem('autoPointsAdded', autoPointsAdded);
             localStorage.setItem('manualPointsUsed', manualPointsUsed);
+            localStorage.setItem('starLock',starLock);
         }
 
-        function updatePoints() {
-            const points = parseFloat(document.getElementById('manualPoints').value);
-            if (isNaN(points) || points < 0.5 || points > 3) {
-                alert("请输入有效的积分值（范围 0.5 到 3）");
-                return;
-            }
-            if (selectedStudent && !manualPointsUsed) {
-                selectedStudent.points += points;
-                synPoints();
-                document.getElementById('manualPoints').value = '';
-                manualPointsUsed = true;
-                updateLocalStorage();
-                alert(`已为 ${selectedStudent.name} 加分 ${points}。`);
-            } else if (!selectedStudent) {
-                alert("请先点名一个学生。");
+        // 初始化星级点击事件监听器
+        document.querySelectorAll('.rating input').forEach(star => {
+            star.addEventListener('change', function() {
+                if (!starLock) {  // 检查星星是否已经被点击过
+                    updatePoints(this.value);
+                } else {
+                    alert("每次点名只能点击一次星星进行加分。");
+                }
+            });
+        });
+
+        // 根据选中的星级为学生加分
+        function updatePoints(points) {
+            points = parseInt(points); // 将点击的星星值转换为整数
+            if (selectedStudent) {
+                if (!starLock) {  // 检查星星是否已经被点击过
+                    selectedStudent.points += points;  // 根据星星值加分
+                    synPoints();
+                    alert(`已为 ${selectedStudent.name} 加分 ${points}。`);
+                    updateLocalStorage();
+                    starLock = true;  // 点击后锁定星星
+                } else {
+                    alert("每次点名只能点击一次星星进行加分。");
+                }
             } else {
-                alert("不可重复使用手动加分");
+                alert("请先点名一个学生。");
             }
         }
+
+        // 禁用所有星星选择
+        function disableStars() {
+            document.querySelectorAll('.rating input').forEach(star => {
+                star.disabled = true;
+            });
+        }
+
+        // 启用所有星星选择
+        function enableStars() {
+            document.querySelectorAll('.rating input').forEach(star => {
+                star.disabled = false;
+            });
+        }
+
 
         function resetAllPoints() {
             students.forEach(student => student.points = 0);
