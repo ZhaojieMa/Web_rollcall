@@ -170,7 +170,7 @@
             const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent
             if (storedStudent) {
                 selectedStudent = JSON.parse(storedStudent);
-                document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
+                document.getElementById('selectedStudent').innerText = `${selectedStudent.name} (学号: ${selectedStudent.id})`;
                 autoPointsAdded = localStorage.getItem('autoPointsAdded') === 'true';
                 manualPointsUsed = localStorage.getItem('manualPointsUsed') === 'true';
                 starLock = localStorage.getItem('starLock') === 'true';
@@ -311,6 +311,7 @@
 
                 // 恢复页面元素
                 document.querySelector('.container').classList.remove('hidden');
+                document.getElementById('selectedStudent').style.display = 'block';//显示
             }
         });
 
@@ -369,8 +370,9 @@
                 clearInterval(intervalId);
                 scrollingNamesDiv.innerHTML = '';
                 if (selectedStudent) {
-                    document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
-                    createParticlesFromText(`被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`);
+                    document.getElementById('selectedStudent').innerText = `${selectedStudent.name} (学号: ${selectedStudent.id})`;
+                    document.getElementById('selectedStudent').style.display = 'none';//隐藏
+                    createParticlesFromText(`${selectedStudent.name} (学号: ${selectedStudent.id})`);
                     updateLocalStorage();
                 }  
             }, 3000);
