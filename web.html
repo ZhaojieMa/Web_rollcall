@@ -309,6 +309,9 @@
                 // 清空显示的被点到学生信息  
                 scrollingNamesDiv.innerHTML = '';
 
+                particles = [];
+                particleCtx.clearRect(0,0,particleCanvas.width,particleCanvas.height);
+
                 // 恢复页面元素
                 document.querySelector('.container').classList.remove('hidden');
                 document.getElementById('selectedStudent').style.display = 'block';//显示
