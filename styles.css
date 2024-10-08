@@ -196,7 +196,7 @@ input[type="text"] {
 }
 
 #scrollingNames {
-    font-size: 24px; /* 根据需要调整字体大小 */
+    font-size: 50px; /* 根据需要调整字体大小 */
     margin: 20px 0; /* 增加上下边距 */
     text-align: center; /* 文本居中 */
     width: 100%; /* 确保占满父容器宽度 */

@@ -58,9 +58,8 @@
     </div> 
 
     <div id="scrollingNames"></div>  
-    <div id="selectedStudent">
-        <canvas id="particleCanvas"></canvas>
-    </div>
+    <div id="selectedStudent"></div>
+    <canvas id="particleCanvas"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
     <script>
@@ -307,7 +306,7 @@
                 !scrollingNamesDiv.contains(event.target) && 
                 !selectedStudentDiv.contains(event.target)) {
 
-                // 清空显示的被点到学生信息
+                // 清空显示的被点到学生信息  
                 scrollingNamesDiv.innerHTML = '';
 
                 // 恢复页面元素
