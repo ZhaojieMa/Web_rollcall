@@ -174,6 +174,8 @@
                 document.getElementById('selectedStudent').innerText = `被点到: ${selectedStudent.name} (学号: ${selectedStudent.id})`;
                 autoPointsAdded = localStorage.getItem('autoPointsAdded') === 'true';
                 manualPointsUsed = localStorage.getItem('manualPointsUsed') === 'true';
+                starLock = localStorage.getItem('starLock') === 'true';
+                onClassAdded = localStorage.getItem('onClassAdded') === 'true';
             }
             toggleButtons();//按键锁
         };
@@ -381,6 +383,7 @@
             localStorage.setItem('autoPointsAdded', autoPointsAdded);
             localStorage.setItem('manualPointsUsed', manualPointsUsed);
             localStorage.setItem('starLock',starLock);
+            localStorage.setItem('onClassAdded',onClassAdded);
         }
 
         // 初始化星级点击事件监听器
@@ -402,8 +405,8 @@
                     selectedStudent.points += points;  // 根据星星值加分
                     synPoints();
                     alert(`已为 ${selectedStudent.name} 加分 ${points}。`);
-                    updateLocalStorage();
                     starLock = true;  // 点击后锁定星星
+                    updateLocalStorage();
                 } else {
                     alert("每次点名只能点击一次星星进行加分。");
                 }
