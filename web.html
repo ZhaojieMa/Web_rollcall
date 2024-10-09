@@ -6,6 +6,9 @@
     <title>随机点名系统</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css'>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Long+Cang&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">  
@@ -98,7 +101,7 @@
         function createParticlesFromText(text) {
             // 清空粒子画布
             particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-            particleCtx.font = 'bold 50px Arial';  // 字体大小可调整
+            particleCtx.font = '120px "Long Cang"';  // 字体大小可调整
             particleCtx.fillStyle = '#003366';
             const x = particleCanvas.width / 2 - particleCtx.measureText(text).width / 2;
             const y = particleCanvas.height / 2;
@@ -124,7 +127,7 @@
         function Particle(x, y) {
             this.x = x;
             this.y = y;
-            this.size = 2;
+            this.size = 1;
             this.baseX = this.x;
             this.baseY = this.y;
             this.density = Math.random() * 30 + 1;
@@ -296,26 +299,29 @@
             }
         }
 
-        document.addEventListener('click', function(event) {
-            const drawButton = document.getElementById('drawButton');
-            const scrollingNamesDiv = document.getElementById('scrollingNames');
-            const selectedStudentDiv = document.getElementById('selectedStudent');
+        document.addEventListener('click', async function(event) {  
+            const drawButton = document.getElementById('drawButton');  
+            const scrollingNamesDiv = document.getElementById('scrollingNames');  
+            const selectedStudentDiv = document.getElementById('selectedStudent'); 
 
-            // 检查点击事件是否发生在按钮或滚动区域之外
-            if (!drawButton.contains(event.target) && 
-                !scrollingNamesDiv.contains(event.target) && 
-                !selectedStudentDiv.contains(event.target)) {
-
-                // 清空显示的被点到学生信息  
-                scrollingNamesDiv.innerHTML = '';
-
-                particles = [];
-                particleCtx.clearRect(0,0,particleCanvas.width,particleCanvas.height);
-
-                // 恢复页面元素
-                document.querySelector('.container').classList.remove('hidden');
-                document.getElementById('selectedStudent').style.display = 'block';//显示
+            if(!clickEnabled){
+                return;
             }
+
+            if (!drawButton.contains(event.target) &&   
+                !scrollingNamesDiv.contains(event.target) &&   
+                !selectedStudentDiv.contains(event.target)) {  
+        
+                // 清空显示的被点到学生信息  
+                scrollingNamesDiv.innerHTML = '';  
+
+                particles = [];  
+                particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);  
+ 
+                // 恢复页面元素  
+                document.querySelector('.container').classList.remove('hidden');  
+                selectedStudentDiv.style.display = 'block'; // 显示  
+            }  
         });
 
         function synPoints() {
@@ -357,29 +363,36 @@
             }
         }
 
+        let clickEnabled = true; // 用于跟踪点击是否被允许  
 
-        function scrollStudents() {
-            document.getElementById('selectedStudent').innerText = '';
-            const scrollingNamesDiv = document.getElementById('scrollingNames');
-            scrollingNamesDiv.innerHTML = '';
-            let index = 0;
+        function scrollStudents() {  
+            document.getElementById('selectedStudent').innerText = '';  
+            const scrollingNamesDiv = document.getElementById('scrollingNames');  
+            scrollingNamesDiv.innerHTML = '';  
+            let index = 0;  
 
-            intervalId = setInterval(() => {
-                scrollingNamesDiv.innerText = students[index].name;
-                index = (index + 1) % students.length;
-            }, 100);
+            clickEnabled = false; // 禁用点击  
 
-            setTimeout(() => {
-                clearInterval(intervalId);
-                scrollingNamesDiv.innerHTML = '';
-                if (selectedStudent) {
-                    document.getElementById('selectedStudent').innerText = `${selectedStudent.name} (学号: ${selectedStudent.id})`;
-                    document.getElementById('selectedStudent').style.display = 'none';//隐藏
-                    createParticlesFromText(`${selectedStudent.name} (学号: ${selectedStudent.id})`);
-                    updateLocalStorage();
-                }  
-            }, 3000);
-        }
+            return new Promise((resolve) => {  
+                intervalId = setInterval(() => {  
+                    scrollingNamesDiv.innerText = students[index].name;  
+                    index = (index + 1) % students.length;  
+                }, 100);  
+
+                setTimeout(() => {  
+                clearInterval(intervalId);  
+                    scrollingNamesDiv.innerHTML = '';  
+                    if (selectedStudent) {  
+                        document.getElementById('selectedStudent').innerText = `${selectedStudent.name} (学号: ${selectedStudent.id})`;  
+                        document.getElementById('selectedStudent').style.display = 'none'; // 隐藏  
+                        createParticlesFromText(`${selectedStudent.name} (学号:${selectedStudent.id})`);  
+                        updateLocalStorage();  
+                    }  
+                    resolve(); // 完成滚动时解析Promise  
+                    clickEnabled = true; // 恢复点击  
+                }, 3000);  
+            });  
+        }  
 
         function updateLocalStorage() {
             localStorage.setItem('selectedStudent', JSON.stringify(selectedStudent));
