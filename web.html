@@ -98,17 +98,31 @@
 
         let particles = [];
 
-        function createParticlesFromText(text) {
-            // 清空粒子画布
+        function createParticlesFromText(a, b) {
+            // 清空画布
             particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-            particleCtx.font = '120px "Long Cang"';  // 字体大小可调整
-            particleCtx.fillStyle = '#003366';
-            const x = particleCanvas.width / 2 - particleCtx.measureText(text).width / 2;
-            const y = particleCanvas.height / 2;
-            particleCtx.fillText(text, x, y);
 
+            // 设置字体
+            particleCtx.font = '150px "Long Cang"';
+            particleCtx.fillStyle = '#003366';
+
+            // 绘制第一行文字
+            const x1 = particleCanvas.width / 2 - particleCtx.measureText(selectedStudent.name).width / 2;
+            const y1 = particleCanvas.height / 2 - 50;  // 向上移动50像素
+            particleCtx.fillText(selectedStudent.name, x1, y1);
+
+            // 绘制第二行文字
+            const x2 = particleCanvas.width / 2 - particleCtx.measureText(selectedStudent.id).width / 2;
+            const y2 = particleCanvas.height / 2 + 70;  // 向下移动70像素
+            particleCtx.fillText(selectedStudent.id, x2, y2);
+
+            // 获取整个画布的像素数据
             const imageData = particleCtx.getImageData(0, 0, particleCanvas.width, particleCanvas.height);
-            particles = []; // 清空之前的粒子
+
+            // 清空粒子数组
+            particles = [];
+
+            // 创建粒子
             for (let y = 0; y < imageData.height; y += 2) {
                 for (let x = 0; x < imageData.width; x += 2) {
                     const index = (y * imageData.width + x) * 4;
@@ -121,6 +135,8 @@
                     }
                 }
             }
+
+            // 启动粒子动画
             animateParticles();
         }
 
