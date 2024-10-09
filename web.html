@@ -286,7 +286,7 @@
             starLock = false;
 
 
-            const totalPoints = students.reduce((sum, student) => sum + Math.max(1, 10 - student.points), 0);
+            const totalPoints = students.reduce((sum, student) => sum + (student.points > 10 ? 1 / student.points : 10 - student.points), 0);
             const randomValue = Math.random() * totalPoints;
             let cumulativePoints = 0;
 
