@@ -14,18 +14,20 @@
 <body>
     <h1>随机点名系统</h1>
     <div id="message" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background-color:rgba(0, 0, 0, 0.5); color:white; padding:10px; border-radius:5px; white-space:nowrap;">  
-    </div> 
+    </div>
     <div class="container">    
         <div class="file-upload">  
 
-            <label class="file-label">  
-                <input type="file" id="fileInput" onchange="updateFileName()" />  
-                选择文件  
-            </label>  
+            <label class="file-label" for="fileInput" style="cursor: pointer;">
+                <img src="file-icon.svg" alt="选择文件" style="width: 40px; height: 40px;" />
+                <input type="file" id="fileInput" style="display: none;" onchange="updateFileName()" /> 
+            </label>
 
             <span id="fileName">未选择文件</span>  
 
-            <button id="uploadButton" onclick="uploadFile()">导入</button>  
+            <button id="uploadButton" onclick="uploadFile()"style="background: none; border: none; padding: 0; cursor: pointer;">
+                <img src="upload-icon.svg" alt="导入" style="width: 40px; height: 40px;" />
+            </button>  
         </div>  
     
         <div class="button-row">  
@@ -53,6 +55,8 @@
             <input type="radio" name="rating" id="1" value="1" />
             <label for="1" data-value="1"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">1</span></label>
         </div>
+
+    
 
         <!--<input type="text" id="manualPoints" placeholder="手动加减积分 (范围 0.5 到 3)" />  -->
         
@@ -195,11 +199,9 @@
             messageDiv.style.display = "block"; // 显示消息  
 
             setTimeout(() => {  
-            messageDiv.style.display = "none"; // 1秒后隐藏消息  
+                messageDiv.style.display = "none"; // 1秒后隐藏消息  
             }, 1000);  
         } 
-
-
 
         window.onload = function() {
             const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent

@@ -4,16 +4,11 @@
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <title>学生名单</title>  
-    <link rel="stylesheet" href="styles.css"> 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="styles.css">   
+    <link rel="preconnect" href="https://fonts.googleapis.com">  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+    <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet">   
     <style>  
-        body {  
-            text-align: center;  
-            position: relative; /* 为绝对定位的子元素提供基准 */  
-        }  
-
         .tooltip {  
             display: none;  
             position: absolute;  
@@ -23,15 +18,19 @@
             border-radius: 5px;  
             padding: 5px;  
             z-index: 1;  
-            white-space: nowrap; /* 防止换行 */  
-        }
+        }  
+
+        body {  
+            text-align: center;  
+            position: relative; /* 为绝对定位的子元素提供基准 */  
+        }  
 
         /* 将按钮容器放在右上角 */  
         .button-container {  
             position: fixed;  
             top: 20px;  
             right: 20px;  
-        }
+        }  
 
         /* 按钮样式 */  
         .button-container button {  
@@ -47,28 +46,28 @@
     <div class="button-container">  
         <button onclick="resetAllPoints()">一键清除所有积分</button>  
         <button onclick="goBack()">返回</button>  
-    </div>    
+    </div>  
 
-    <div id="tooltip" class="tooltip"></div>
+    <div class="tooltip" id="tooltip"></div>
+    
+    <div id="message" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background-color:rgba(0, 0, 0, 0.5); color:white; padding:10px; border-radius:5px; white-space:nowrap;">  
+    </div>
 
     <script>  
         // 返回上一页  
         function goBack() {  
             window.history.back();  
         }  
- 
-        const tooltip = document.getElementById('tooltip'); 
-        
-        function showTooltip(event, text) {  
-            tooltip.textContent = text;  
-            tooltip.style.display = 'block';  
-            tooltip.style.left = event.pageX + 10 + 'px'; // 光标右侧10px  
-            tooltip.style.top = event.pageY + 10 + 'px'; // 光标下方10px  
-        }
 
-        function hideTooltip() {  
-            tooltip.style.display = 'none';  
-        } 
+        function showMessage(text) {  
+            const messageDiv = document.getElementById("message");  
+            messageDiv.textContent = text;  
+            messageDiv.style.display = "block"; // 显示消息  
+
+            setTimeout(() => {  
+                messageDiv.style.display = "none"; // 1秒后隐藏消息  
+            }, 1000);  
+        }
 
         // 加载学生名单  
         function loadStudentList() {  
@@ -87,33 +86,40 @@
                         ${student.id} - ${student.name} - 积分: ${student.points}  
                         <button   
                             data-tooltip="清除积分"  
-                            onclick="clearStudentPoints(${index})"   
-                            onmouseover="showTooltip(event, '清除积分')"   
-                            onmouseout="hideTooltip()"   
+                            onclick="clearStudentPoints(${index})"  
                             style="background: none; border: none; padding: 0; cursor: pointer;">  
                             <img src="clear-icon.svg" alt="清除" style="width: 40px; height: 40px;" />   
                         </button>  
                         <button   
-                            data-tooltip="删除"  
-                            onclick="deleteStudent(${index})"   
-                            onmouseover="showTooltip(event, '删除')"   
-                            onmouseout="hideTooltip()"   
+                            data-tooltip="删除学生"  
+                            onclick="deleteStudent(${index})"  
                             style="background: none; border: none; padding: 0; cursor: pointer;">  
                             <img src="delete-icon.svg" alt="删除" style="width: 40px; height: 40px;" />   
                         </button>  
                     </div>`;  
-            });  
-        }    
-        
-        function showMessage(text) {  
-            const messageDiv = document.getElementById("message");  
-            messageDiv.textContent = text;  
-            messageDiv.style.display = "block"; // 显示消息  
+            });   
 
-            setTimeout(() => {  
-            messageDiv.style.display = "none"; // 1秒后隐藏消息  
-            }, 1000);  
-        }
+            // 注册工具提示事件  
+            registerTooltipEvents();  
+        }  
+
+        function registerTooltipEvents() {  
+            const buttons = document.querySelectorAll('button[data-tooltip]');  
+            const tooltip = document.getElementById('tooltip');  
+
+            buttons.forEach(button => {  
+                button.addEventListener('mouseenter', function(event) {  
+                    tooltip.textContent = button.getAttribute('data-tooltip');  
+                    tooltip.style.display = 'block';  
+                    tooltip.style.left = event.pageX + 'px';  
+                    tooltip.style.top = (event.pageY + 20) + 'px'; // 鼠标下方略微偏移  
+                });  
+
+                button.addEventListener('mouseleave', function() {  
+                    tooltip.style.display = 'none';  
+                });  
+            });  
+        }  
 
         // 清除单个学生积分  
         function clearStudentPoints(index) {  
