@@ -8,7 +8,6 @@ body {
 }  
 
 .container {  
-    /*max-width: 900px;   增大容器宽度 */
     width: auto;
     margin: auto;  
     padding: 40px;  /* 增加内边距 */
@@ -100,7 +99,9 @@ h1 {
 button {  
     background-color: rgba(220, 220, 220, 0.8); /* 添加淡灰色背景 */
     color: #333;  /* 深色字体 */
+    font-family: "Ma Shan Zheng", cursive;
     font-size: 2.5vh;
+    font-weight: bold;
     border: 1px solid rgba(0, 0, 0, 0.2); /* 半透明边框 */
     padding: 15px 25px; /* 增大内边距 */
     border-radius: 10px; /* 圆角 */
@@ -111,7 +112,7 @@ button {
 }  
 
 button:hover {  
-    background-color: rgba(220, 220, 220, 0.9); /* 鼠标悬停时稍微加深背景 */
+    background-color: rgba(209, 208, 208, 0.9); /* 鼠标悬停时稍微加深背景 */
     transform: translateY(-2px); /* 鼠标悬停时稍微上升 */  
     box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }  
@@ -134,6 +135,7 @@ input[type="text"] {
 
 #selectedStudent {  
     font-size: 32px;  /* 增大选中学生字体 */
+    font-family: "Ma Shan Zheng", cursive;
     text-align: center;  
     margin-top: 20px;  
     color: #007bff;  
@@ -144,10 +146,11 @@ input[type="text"] {
     transform: translateX(-50%); 
 }  
 
-#studentList {  
+#studentList { 
+    font-family: "Ma Shan Zheng", cursive; 
     font-weight: bold;
-    font-size: 30px;
-    margin-top: 20px;  
+    font-size: 25px;
+    margin-top: 85px;  
 }  
 
 .student-item {  
