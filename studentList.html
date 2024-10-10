@@ -14,6 +14,18 @@
             position: relative; /* 为绝对定位的子元素提供基准 */  
         }  
 
+        .tooltip {  
+            display: none;  
+            position: absolute;  
+            background-color: #555;  
+            color: #fff;  
+            text-align: center;  
+            border-radius: 5px;  
+            padding: 5px;  
+            z-index: 1;  
+            white-space: nowrap; /* 防止换行 */  
+        }
+
         /* 将按钮容器放在右上角 */  
         .button-container {  
             position: fixed;  
@@ -25,6 +37,7 @@
         .button-container button {  
             margin-left: 10px; /* 按钮之间留一点间隔 */  
         }  
+
     </style>  
 </head>  
 <body>  
@@ -34,13 +47,28 @@
     <div class="button-container">  
         <button onclick="resetAllPoints()">一键清除所有积分</button>  
         <button onclick="goBack()">返回</button>  
-    </div>  
+    </div>    
+
+    <div id="tooltip" class="tooltip"></div>
 
     <script>  
         // 返回上一页  
         function goBack() {  
             window.history.back();  
         }  
+ 
+        const tooltip = document.getElementById('tooltip'); 
+        
+        function showTooltip(event, text) {  
+            tooltip.textContent = text;  
+            tooltip.style.display = 'block';  
+            tooltip.style.left = event.pageX + 10 + 'px'; // 光标右侧10px  
+            tooltip.style.top = event.pageY + 10 + 'px'; // 光标下方10px  
+        }
+
+        function hideTooltip() {  
+            tooltip.style.display = 'none';  
+        } 
 
         // 加载学生名单  
         function loadStudentList() {  
@@ -57,11 +85,25 @@
                 list.innerHTML += `  
                     <div>  
                         ${student.id} - ${student.name} - 积分: ${student.points}  
-                        <button onclick="clearStudentPoints(${index})">清除积分</button>  
-                        <button onclick="deleteStudent(${index})">删除</button>  
+                        <button   
+                            data-tooltip="清除积分"  
+                            onclick="clearStudentPoints(${index})"   
+                            onmouseover="showTooltip(event, '清除积分')"   
+                            onmouseout="hideTooltip()"   
+                            style="background: none; border: none; padding: 0; cursor: pointer;">  
+                            <img src="clear-icon.svg" alt="清除" style="width: 40px; height: 40px;" />   
+                        </button>  
+                        <button   
+                            data-tooltip="删除"  
+                            onclick="deleteStudent(${index})"   
+                            onmouseover="showTooltip(event, '删除')"   
+                            onmouseout="hideTooltip()"   
+                            style="background: none; border: none; padding: 0; cursor: pointer;">  
+                            <img src="delete-icon.svg" alt="删除" style="width: 40px; height: 40px;" />   
+                        </button>  
                     </div>`;  
             });  
-        }  
+        }     
 
         // 清除单个学生积分  
         function clearStudentPoints(index) {  
