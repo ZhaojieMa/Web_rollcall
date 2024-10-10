@@ -103,7 +103,17 @@
                         </button>  
                     </div>`;  
             });  
-        }     
+        }    
+        
+        function showMessage(text) {  
+            const messageDiv = document.getElementById("message");  
+            messageDiv.textContent = text;  
+            messageDiv.style.display = "block"; // 显示消息  
+
+            setTimeout(() => {  
+            messageDiv.style.display = "none"; // 1秒后隐藏消息  
+            }, 1000);  
+        }
 
         // 清除单个学生积分  
         function clearStudentPoints(index) {  
@@ -111,7 +121,7 @@
             students[index].points = 0; // 清除该学生的积分  
             localStorage.setItem('students', JSON.stringify(students)); // 更新本地存储  
             loadStudentList(); // 重新加载学生列表  
-            alert("已清除该学生积分。");  
+            showMessage("已清除该学生积分。");  
         }  
 
         // 删除单个学生  
@@ -120,7 +130,7 @@
             students.splice(index, 1); // 删除该学生  
             localStorage.setItem('students', JSON.stringify(students)); // 更新本地存储  
             loadStudentList(); // 重新加载学生列表  
-            alert("已删除该学生。");  
+            showMessage("已删除该学生。");  
         }                                                                               
 
         // 一键清除所有学生的积分  
@@ -129,7 +139,7 @@
             students.forEach(student => student.points = 0); // 清除所有学生的积分  
             localStorage.setItem('students', JSON.stringify(students)); // 更新本地存储  
             loadStudentList(); // 重新加载学生列表  
-            alert("所有学生的积分已清除。");  
+            showMessage("所有学生的积分已清除。");  
         }  
 
         window.onload = loadStudentList; // 页面加载时调用  
