@@ -4,6 +4,7 @@ body {
     margin: 0;  
     padding: 20px;  
     background: url('2.png') no-repeat center center fixed;
+    background-size: cover;
 }  
 
 .container {  
@@ -184,19 +185,6 @@ input[type="text"] {
 
 #fileName {  
     margin-right: 10px;  
-}  
-
-.btn {  
-    background-color: #28a745;  
-    color: white;  
-    border: none;  
-    border-radius: 4px;  
-    padding: 8px 12px;  
-    cursor: pointer;  
-}  
-
-.btn:hover {  
-    background-color: #218838;  
 }  
 
 .button-row {  
