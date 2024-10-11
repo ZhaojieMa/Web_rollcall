@@ -236,6 +236,7 @@
         window.onload = function() {
             // 注册工具提示事件  
             registerTooltipEvents();
+            resetStars();
             const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent
             if (storedStudent) {
                 selectedStudent = JSON.parse(storedStudent);
@@ -326,6 +327,7 @@
             }
             // 隐藏页面元素
             document.querySelector('.container').classList.add('hidden');
+            resetStars();
     
             lock = false;
             lock1 = false;
@@ -487,7 +489,7 @@
                     selectedStudent.points += points;  // 根据星星值加分
                     synPoints();
                     showMessage(`已为 ${selectedStudent.name} 加分 ${points}。`);
-                    starLock = true;  // 点击后锁定星星
+                    starLock = true;  // 点击后锁定星星不能再加分
                     updateLocalStorage();
                 } else {
                     showMessage("每次点名只能点击一次星星进行加分。");
@@ -496,6 +498,13 @@
                 showMessage("请先点名一个学生。");
             }
         }
+
+        //每次返回页面或者重新点名使星星恢复原始形态
+        function resetStars() {   
+            document.querySelectorAll('.rating input').forEach(star => {  
+                star.checked = false; // 取消选中状态  
+            });  
+        } 
 
         // 禁用所有星星选择
         function disableStars() {
