@@ -30,7 +30,7 @@
             <div class="modal-content">  
                 <span class="close-button" id="closeButton">&times;</span>  
                 <div class="upload-box" id="uploadBox">  
-                    <p>点击或拖拽文件到此处上传</p>  
+                    <p id="uploadText">点击或拖拽文件到此处上传</p>  
                     <input type="file" id="fileInput" style="display: none;"/>  
                     <div class="pic">&#8595;</div>  
                 </div>  
@@ -539,6 +539,7 @@
         });
 
         closeButton.addEventListener('click', function() {  
+            resetUpload();
             uploadModal.style.display = 'none'; // 关闭模态框  
         });  
 
@@ -567,37 +568,63 @@
         uploadBox.addEventListener('drop', function(event) {  
             event.preventDefault();  
             uploadBox.style.borderColor = '#ccc';  
-            const files = event.dataTransfer.files;  
-            if (files.length > 0) {  
-                alert('已选择文件: ' + files[0].name);  
+            const files = event.dataTransfer.files; 
+            if (files.length > 0) { 
+                const fileName = files[0].name; // 获取文件名
+                const uploadText = document.getElementById('uploadText');
+                const excelLogo = '📊'; // Excel 图标，可以使用 emoji，也可以使用图像 URL
+        
+                // 替换内容
+                uploadText.innerHTML = `${excelLogo} ${fileName}`;
+                document.querySelector('.pic').style.display = 'none'; // 隐藏箭头 
+                showMessage('已选择文件: ' + files[0].name);  
+
+                // 将文件设置到 fileInput 中，以便 OK 按钮可以获取到
+                fileInput.files = files;
             }  
         });  
 
         fileInput.addEventListener('change', function(event) {  
             const file = event.target.files[0];  
             if (file) {  
-                alert('已选择文件: ' + file.name);  
+                const fileName = file.name; // 获取文件名
+                const uploadText = document.getElementById('uploadText');
+                const excelLogo = '📊'; // Excel 图标，可以使用 emoji，也可以使用图像 URL
+        
+                // 替换内容
+                uploadText.innerHTML = `${excelLogo} ${fileName}`;
+                document.querySelector('.pic').style.display = 'none'; // 隐藏箭头
+                showMessage('已选择文件: ' + file.name);  
             }  
         });  
 
-        document.getElementById('cancelButton').addEventListener('click', function() {  
+        document.getElementById('cancelButton').addEventListener('click', function() { 
+            resetUpload(); 
             fileInput.value = '';  
             uploadModal.style.display = 'none'; // 取消时关闭模态框  
-            alert('已取消选择');  
+            showMessage('已取消选择');  
         });  
 
         document.getElementById('okButton').addEventListener('click', function() {  
             const input = document.getElementById('fileInput');  
-            const file = input.files[0];  // 获取选中的文件  
-
+            const file = input.files[0];  // 获取选中的文件 
+            
             if (!file) {  
-                alert('请先选择文件');  
+                showMessage('请先选择文件');  
             } else {  
-                alert('文件导入成功: ' + file.name);  
+                showMessage('文件导入成功: ' + file.name);  
                 uploadFile();  // 调用上传文件的函数  
                 uploadModal.style.display = 'none'; // 关闭模态框  
             }  
+            resetUpload();
         });
+
+        // 重置上传状态的函数
+        function resetUpload() {
+            document.getElementById('fileInput').value = ''; // 清空文件输入
+            document.getElementById('uploadText').innerHTML = '点击或拖拽文件到此处上传'; // 恢复提示文本
+            document.querySelector('.pic').style.display = 'block'; // 显示箭头
+        }
     </script>
 </body>
 </html>
