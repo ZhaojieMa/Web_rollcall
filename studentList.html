@@ -79,6 +79,9 @@
                 return;  
             }  
 
+            // 按积分从大到小排序学生  
+            students.sort((a, b) => b.points - a.points);  
+
             students.forEach((student, index) => {  
                 list.innerHTML += `  
                     <div>  
