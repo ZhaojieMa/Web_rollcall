@@ -9,17 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
     <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet">   
     <style>  
-        .tooltip {  
-            display: none;  
-            position: absolute;  
-            background-color: #555;  
-            color: #fff;  
-            text-align: center;  
-            border-radius: 5px;  
-            padding: 5px;  
-            z-index: 1;  
-        }  
-
         body {  
             text-align: center;  
             position: relative; /* 为绝对定位的子元素提供基准 */  
@@ -79,6 +68,8 @@
 
         // 加载学生名单  
         function loadStudentList() {  
+            // 注册工具提示事件  
+            registerTooltipEvents(); 
             const students = JSON.parse(localStorage.getItem('students')) || [];  
             const list = document.getElementById('studentList');  
             list.innerHTML = '';  
@@ -105,10 +96,7 @@
                             <img src="delete-icon.svg" alt="删除" style="width: 40px; height: 40px;" />   
                         </button>  
                     </div>`;  
-            });   
-
-            // 注册工具提示事件  
-            registerTooltipEvents();  
+            });    
         }  
 
         function registerTooltipEvents() {  

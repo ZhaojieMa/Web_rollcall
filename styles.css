@@ -2,16 +2,16 @@ body {
     font-family: Arial, sans-serif; 
     background-color: #f4f4f4;
     margin: 0;  
-    padding: 20px;  
+    padding: 2vh;  
     background: url('2.png') no-repeat center center fixed;
     background-size: cover;
 }  
 
 .container {  
     width: auto;
-    margin: auto;  
-    padding: 40px;  /* 增加内边距 */
-    border-radius: 8px;  
+    margin: auto;
+    padding: 4vh;  /* 增加内边距 */
+    border-radius: 0.8vw;  
     display: flex;
     flex-direction: column;
     justify-content: center;  
@@ -22,21 +22,32 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: 10;  
     pointer-events: none;  
+}
+
+.tooltip {  
+    display: none;  
+    position: absolute;  
+    background-color: #555;  
+    color: #fff;  
+    text-align: center;  
+    border-radius: 5px;  
+    padding: 5px;  
+    z-index: 1;  
 }
 
 .star-number {
     position: absolute;
     background: rgba(255, 255, 255, 0.8);
     color: black;
-    border-radius: 5px;
-    padding: 2px 5px;
-    font-size: 12px;
-    margin-top: -25px; 
-    margin-left: -10px; 
+    border-radius: 0.5vw;
+    padding: 0.2vh 0.5vw;
+    font-size: 1.2vh;
+    margin-top: -2.5vh; 
+    margin-left: -1vw; 
     transition: opacity 0.3s;
 }
 
@@ -60,8 +71,8 @@ body {
 
 .rating label {
     position: relative;
-    margin-right: 6px;
-    font-size: 6em;  /* 增大评分星星 */
+    margin-right: 0.6vw;
+    font-size: 6vw;  /* 增大评分星星 */
     color: gold;
     cursor: pointer;
     transition: 0.5s;
@@ -91,8 +102,8 @@ h1 {
     font-family: "Zhi Mang Xing", cursive;
     text-align: left;  
     color: #333;
-    font-size: 100px;  /* 增大标题字体 */
-    margin-top: 1px;
+    font-size: 6vw;  /* 增大标题字体 */
+    margin-top: 0.1vh;
     position: fixed;
 }  
 
@@ -102,29 +113,29 @@ button {
     font-family: "Ma Shan Zheng", cursive;
     font-size: 2.5vh;
     font-weight: bold;
-    border: 1px solid rgba(0, 0, 0, 0.2); /* 半透明边框 */
-    padding: 15px 25px; /* 增大内边距 */
-    border-radius: 10px; /* 圆角 */
+    border: 0.1vw solid rgba(0, 0, 0, 0.2); /* 半透明边框 */
+    padding: 1.5vh 2.5vw; /* 增大内边距 */
+    border-radius: 1vw; /* 圆角 */
     cursor: pointer;  
-    margin: 10px 5px;  
+    margin: 1vh 0.5vw;  
     transition: background-color 0.3s, transform 0.3s; /* 添加变换效果 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微的阴影 */  
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.1); /* 轻微的阴影 */  
 }  
 
 button:hover {  
     background-color: rgba(209, 208, 208, 0.9); /* 鼠标悬停时稍微加深背景 */
-    transform: translateY(-2px); /* 鼠标悬停时稍微上升 */  
-    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    transform: translateY(-0.2vh); /* 鼠标悬停时稍微上升 */  
+    box-shadow: 0 1.2vw 1.6vw 0 rgba(0, 0, 0, 0.24), 0 1.7vw 5vw 0 rgba(0, 0, 0, 0.19);
 }  
 
 input[type="file"],  
 input[type="text"] {  
     width: 100%;  
-    padding: 15px;  /* 增加输入框内边距 */
-    font-size: 1.1em;  /* 增大输入框字体 */
-    margin: 10px 0;  
-    border: 1px solid #ccc;  
-    border-radius: 5px;  
+    padding: 1.5vh;  /* 增加输入框内边距 */
+    font-size: 1.1vh;  /* 增大输入框字体 */
+    margin: 1vh 0;  
+    border: 0.1vw solid #ccc;  
+    border-radius: 0.5vw;  
 }  
 
 .long-cang-regular {
@@ -134,14 +145,14 @@ input[type="text"] {
 }
 
 #selectedStudent {  
-    font-size: 32px;  /* 增大选中学生字体 */
+    font-size: 3.2vh;  /* 增大选中学生字体 */
     font-family: "Ma Shan Zheng", cursive;
     text-align: center;  
-    margin-top: 20px;  
+    margin-top: 2vh;  
     color: #007bff;  
     transition: transform 0.5s;  
     position: absolute;
-    top: 250px;
+    top: 25vh;
     left: 50%; 
     transform: translateX(-50%); 
 }  
@@ -149,17 +160,17 @@ input[type="text"] {
 #studentList { 
     font-family: "Ma Shan Zheng", cursive; 
     font-weight: bold;
-    font-size: 25px;
-    margin-top: 85px;  
+    font-size: 2.5vh;
+    margin-top: 8.5vh;  
 }  
 
 .student-item {  
     background: #f8f9fa;  
-    border: 1px solid #ddd;  
-    border-radius: 5px;  
-    padding: 10px;  
-    margin: 5px 0;  
-    font-size: 3em;  /* 增大学生列表字体 */
+    border: 0.1vw solid #ddd;  
+    border-radius: 0.5vw;  
+    padding: 1vh;  
+    margin: 0.5vh 0;  
+    font-size: 3vw;  /* 增大学生列表字体 */
     transition: background-color 0.3s;  
 }  
 
@@ -168,53 +179,59 @@ input[type="text"] {
 }  
 
 .file-upload {  
-    font-size: 25px;
+    font-size: 2.5vh;
     display: flex;  
     justify-content: flex-end;  
     align-items: center;  
     width: 100%;  
-    margin-bottom: 10px;  
+    margin-bottom: 1vh;  
 }  
 
 .file-label {  
     display: inline-block;  
-    padding: 10px 15px;  /* 增加文件标签内边距 */
-    border: 1px solid #ccc;  
-    border-radius: 4px;  
+    padding: 1vh 1.5vw;  /* 增加文件标签内边距 */
+    border: 0.1vw solid #ccc;  
+    border-radius: 0.4vw;  
     cursor: pointer;  
-    margin-right: 10px;  
+    margin-right: 1vh;  
 }  
+
+.file-label :hover{
+    background-color: rgba(161, 159, 159, 0.9); /* 鼠标悬停时稍微加深背景 */
+    transform: translateY(-0.2vh); /* 鼠标悬停时稍微上升 */  
+    box-shadow: 0 1.2vw 1.6vw 0 rgba(0, 0, 0, 0.24), 0 1.7vw 5vw 0 rgba(0, 0, 0, 0.19);
+}
 
 .file-label input {  
     display: none;  
 }  
 
 #fileName {  
-    margin-right: 10px;  
+    margin-right: 1vh;  
 }  
 
 .button-row {  
     display: flex;  
     justify-content: center;  
-    margin: 25px 0;  
+    margin: 2.5vh 0;  
 }  
 
 .view-student-row {  
     position: absolute;  
-    bottom: 20px;  
-    right: 20px;  
+    bottom: 2vh;  
+    right: 2vw;  
     display: flex;  
     justify-content: flex-end;  
 }
 
 #scrollingNames {
-    font-size: 50px;  
-    margin: 20px 0;  
+    font-size: 5vh;  
+    margin: 2vh 0;  
     text-align: center;  
     width: 100%;  
     overflow: hidden;  
     position: absolute;
-    top: 250px;
+    top: 25vh;
     left: 50%; 
     transform: translateX(-50%); 
 }

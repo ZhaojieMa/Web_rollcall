@@ -25,13 +25,15 @@
 
             <span id="fileName">未选择文件</span>  
 
-            <button id="uploadButton" onclick="uploadFile()"style="background: none; border: none; padding: 0; cursor: pointer;">
+            <button id="uploadButton" 
+                data-tooltip="导入"
+                onclick="uploadFile()"style="background: none; border: none; padding: 0; cursor: pointer;">
                 <img src="upload-icon.svg" alt="导入" style="width: 40px; height: 40px;" />
             </button>  
         </div>  
     
         <div class="button-row">  
-            <button id="drawButton" onclick="startDraw()" disabled style="margin-bottom: 40px;">开始点名</button>  
+            <button id="drawButton" onclick="startDraw()" style="margin-bottom: 40px;">开始点名</button>  
         </div>  
 
         <div class="button-row">
@@ -39,8 +41,8 @@
         </div>
     
         <div class="button-row">  
-            <button id="correctButton" onclick="repeatCorrectly()" disabled>准确重复问题</button>
-            <button id="incorrectButton" onclick="repeatIncorrectly()" disabled>重复不准确</button>  
+            <button id="correctButton" onclick="repeatCorrectly()">准确重复问题</button>
+            <button id="incorrectButton" onclick="repeatIncorrectly()">重复不准确</button>  
         </div>  
         
         <div class="rating">
@@ -72,6 +74,7 @@
 
     <div id="scrollingNames"></div>  
     <div id="selectedStudent"></div>
+    <div class="tooltip" id="tooltip"></div>
     <canvas id="particleCanvas"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
@@ -193,6 +196,24 @@
             requestAnimationFrame(animateParticles);  // 循环动画
         }
 
+        function registerTooltipEvents() {  
+            const buttons = document.querySelectorAll('button[data-tooltip]');  
+            const tooltip = document.getElementById('tooltip');  
+
+            buttons.forEach(button => {  
+                button.addEventListener('mouseenter', function(event) {  
+                    tooltip.textContent = button.getAttribute('data-tooltip');  
+                    tooltip.style.display = 'block';  
+                    tooltip.style.left = event.pageX + 'px';  
+                    tooltip.style.top = (event.pageY + 20) + 'px'; // 鼠标下方略微偏移  
+                });  
+
+                button.addEventListener('mouseleave', function() {  
+                    tooltip.style.display = 'none';  
+                });  
+            });  
+        }
+
         function showMessage(text) {  
             const messageDiv = document.getElementById("message");  
             messageDiv.textContent = text;  
@@ -204,6 +225,8 @@
         } 
 
         window.onload = function() {
+            // 注册工具提示事件  
+            registerTooltipEvents();
             const storedStudent = localStorage.getItem('selectedStudent');//获取selectedStudent
             if (storedStudent) {
                 selectedStudent = JSON.parse(storedStudent);
@@ -213,7 +236,7 @@
                 starLock = localStorage.getItem('starLock') === 'true';
                 onClassAdded = localStorage.getItem('onClassAdded') === 'true';
             }
-            toggleButtons();//按键锁
+            //toggleButtons();//按键锁
         };
     
         function uploadFile() {  
@@ -274,13 +297,13 @@
             }  
         } 
 
-        function toggleButtons() {
+        /*function toggleButtons() {
             const buttons = ['drawButton', 'correctButton', 'incorrectButton', 'manualButton'];
             const enable = students.length > 0;
             buttons.forEach(buttonId => {
                 document.getElementById(buttonId).disabled = !enable;
             });
-        }
+        }*/
 
         function viewStudentList() {
             window.location.href = 'studentList.html';
@@ -289,12 +312,11 @@
         function startDraw() {
             if (students.length === 0) {
                 showMessage("请先导入学生名单！");
+                document.getElementById("fileInput").click();
                 return;
             }
             // 隐藏页面元素
             document.querySelector('.container').classList.add('hidden');
-            // 隐藏“开始点名”按钮
-            //document.getElementById('drawButton').style.display = 'none';
     
             lock = false;
             lock1 = false;
