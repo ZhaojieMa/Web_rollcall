@@ -17,21 +17,29 @@
     <div id="message" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background-color:rgba(0, 0, 0, 0.5); color:white; padding:10px; border-radius:5px; white-space:nowrap;">  
     </div>
     <div class="container">    
-        <div class="file-upload">  
-
-            <label class="file-label" for="fileInput" style="cursor: pointer;">
+        <div class="file-upload">
+            <button 
+                data-tooltip="导入名单"
+                id="fileButton" style="background: none; border: none; cursor: pointer;">
                 <img src="file-icon.svg" alt="选择文件" style="width: 40px; height: 40px;" />
-                <input type="file" id="fileInput" style="display: none;" onchange="updateFileName()" /> 
-            </label>
-
-            <span id="fileName">未选择文件</span>  
-
-            <button id="uploadButton" 
-                data-tooltip="导入"
-                onclick="uploadFile()"style="background: none; border: none; padding: 0; cursor: pointer;">
-                <img src="upload-icon.svg" alt="导入" style="width: 40px; height: 40px;" />
-            </button>  
+            </button>
+            <span id="fileName" style="display: none;">未选择文件</span> 
         </div>  
+
+        <div class="modal" id="uploadModal">  
+            <div class="modal-content">  
+                <span class="close-button" id="closeButton">&times;</span>  
+                <div class="upload-box" id="uploadBox">  
+                    <p>点击或拖拽文件到此处上传</p>  
+                    <input type="file" id="fileInput" style="display: none;"/>  
+                    <div class="pic">&#8595;</div>  
+                </div>  
+                <div class="button-container">  
+                    <button id="cancelButton">取消</button>  
+                    <button id="okButton">确定</button>  
+                </div>  
+            </div>  
+        </div>
     
         <div class="button-row">  
             <button id="drawButton" onclick="startDraw()" style="margin-bottom: 40px;">开始点名</button>  
@@ -65,7 +73,7 @@
         
         <div class="button-row">  
             <!--<button id="manualButton" onclick="updatePoints()" disabled>更新积分</button>  -->
-            <button id="resetButton" onclick="resetAllPoints()">重置所有积分</button>  
+            <button id="resetButton" onclick="resetAllPoints()" >重置所有积分</button>  
         </div>  
         
         <div class="view-student-row">  
@@ -246,7 +254,7 @@
             if (!file) {  
                 showMessage("请选择一个文件！");  
                 return;  
-            }  
+            } 
 
             const reader = new FileReader();  
             reader.onload = function(e) {  
@@ -313,7 +321,7 @@
         function startDraw() {
             if (students.length === 0) {
                 showMessage("请先导入学生名单！");
-                document.getElementById("fileInput").click();
+                uploadModal.style.display = 'block'; // 显示模态框
                 return;
             }
             // 隐藏页面元素
@@ -503,7 +511,6 @@
             });
         }
 
-
         function resetAllPoints() {
             students.forEach(student => student.points = 0);
             localStorage.setItem('students', JSON.stringify(students));
@@ -512,6 +519,76 @@
             document.getElementById('selectedStudent').innerText = '';
             showMessage("所有积分已重置！");
         }
+
+        //弹窗
+        const fileButton = document.getElementById('fileButton');  
+        const uploadModal = document.getElementById('uploadModal');  
+        const closeButton = document.getElementById('closeButton');  
+
+        fileButton.addEventListener('click',function() {
+            uploadModal.style.display = 'block'; // 显示模态框
+        });
+
+        closeButton.addEventListener('click', function() {  
+            uploadModal.style.display = 'none'; // 关闭模态框  
+        });  
+
+        window.addEventListener('click', function(event) {  
+            if (event.target === uploadModal) {  
+                uploadModal.style.display = 'none'; // 点击模态框外部关闭  
+            }  
+        });  
+
+        const uploadBox = document.getElementById('uploadBox');  
+        const fileInput = document.getElementById('fileInput');  
+
+        uploadBox.addEventListener('click', function() {  
+            fileInput.click();  
+        });  
+
+        uploadBox.addEventListener('dragover', function(event) {  
+            event.preventDefault();  
+            uploadBox.style.borderColor = '#4CAF50';  
+        });  
+
+        uploadBox.addEventListener('dragleave', function() {  
+            uploadBox.style.borderColor = '#ccc';  
+        });  
+
+        uploadBox.addEventListener('drop', function(event) {  
+            event.preventDefault();  
+            uploadBox.style.borderColor = '#ccc';  
+            const files = event.dataTransfer.files;  
+            if (files.length > 0) {  
+                alert('已选择文件: ' + files[0].name);  
+            }  
+        });  
+
+        fileInput.addEventListener('change', function(event) {  
+            const file = event.target.files[0];  
+            if (file) {  
+                alert('已选择文件: ' + file.name);  
+            }  
+        });  
+
+        document.getElementById('cancelButton').addEventListener('click', function() {  
+            fileInput.value = '';  
+            uploadModal.style.display = 'none'; // 取消时关闭模态框  
+            alert('已取消选择');  
+        });  
+
+        document.getElementById('okButton').addEventListener('click', function() {  
+            const input = document.getElementById('fileInput');  
+            const file = input.files[0];  // 获取选中的文件  
+
+            if (!file) {  
+                alert('请先选择文件');  
+            } else {  
+                alert('文件导入成功: ' + file.name);  
+                uploadFile();  // 调用上传文件的函数  
+                uploadModal.style.display = 'none'; // 关闭模态框  
+            }  
+        });
     </script>
 </body>
 </html>
