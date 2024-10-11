@@ -47,16 +47,16 @@
         </div>  
         
         <div class="rating">
-            <input type="radio" name="rating" id="5" value="5" />
-            <label for="5" data-value="5"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">5</span></label>
-            <input type="radio" name="rating" id="4" value="4" />
-            <label for="4" data-value="4"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">4</span></label>
-            <input type="radio" name="rating" id="3" value="3" />
-            <label for="3" data-value="3"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">3</span></label>
-            <input type="radio" name="rating" id="2" value="2" />
-            <label for="2" data-value="2"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">2</span></label>
-            <input type="radio" name="rating" id="1" value="1" />
-            <label for="1" data-value="1"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">1</span></label>
+            <input type="radio" name="rating" id="5" value="3" />
+            <label for="5" data-value="5"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">3</span></label>
+            <input type="radio" name="rating" id="4" value="2" />
+            <label for="4" data-value="4"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">2</span></label>
+            <input type="radio" name="rating" id="3" value="1.5" />
+            <label for="3" data-value="3"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">1.5</span></label>
+            <input type="radio" name="rating" id="2" value="1" />
+            <label for="2" data-value="2"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">1</span></label>
+            <input type="radio" name="rating" id="1" value="0.5" />
+            <label for="1" data-value="1"><i class="icon ion-md-star-outline"></i><span class="star-number hidden">0.5</span></label>
         </div>
 
     
@@ -473,7 +473,7 @@
 
         // 根据选中的星级为学生加分
         function updatePoints(points) {
-            points = parseInt(points); // 将点击的星星值转换为整数
+            points = parseFloat(points); // 将点击的星星值转换为整数
             if (selectedStudent) {
                 if (!starLock) {  // 检查星星是否已经被点击过
                     selectedStudent.points += points;  // 根据星星值加分
