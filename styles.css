@@ -7,7 +7,7 @@ body {
     background-size: cover;
 }  
 
-.container {  
+.container { 
     width: auto;
     margin: auto;
     padding: 4vh;  /* 增加内边距 */
@@ -145,11 +145,11 @@ input[type="text"] {
 }
 
 #selectedStudent {  
-    font-size: 3.2vh;  /* 增大选中学生字体 */
+    font-size: 4vh;  /* 增大选中学生字体 */
     font-family: "Ma Shan Zheng", cursive;
     text-align: center;  
     margin-top: 2vh;  
-    color: #007bff;  
+    color: #2f2f35;  
     transition: transform 0.5s;  
     position: absolute;
     top: 25vh;
@@ -197,7 +197,7 @@ input[type="text"] {
 }  
 
 .file-label :hover{
-    background-color: rgba(161, 159, 159, 0.9); /* 鼠标悬停时稍微加深背景 */
+    background-color: rgba(192, 191, 191, 0.9); /* 鼠标悬停时稍微加深背景 */
     transform: translateY(-0.2vh); /* 鼠标悬停时稍微上升 */  
     box-shadow: 0 1.2vw 1.6vw 0 rgba(0, 0, 0, 0.24), 0 1.7vw 5vw 0 rgba(0, 0, 0, 0.19);
 }
