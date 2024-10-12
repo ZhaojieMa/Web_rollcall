@@ -256,6 +256,8 @@ button:hover {
 }  
 
 .upload-box {  
+    font-size: 24px;
+    font-family: "Ma Shan Zheng", cursive;
     border: 2px dashed #ccc;  
     padding: 20px;  
     margin-bottom: 10px;  
