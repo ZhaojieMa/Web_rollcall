@@ -156,7 +156,6 @@ window.onload = function() {
         starLock = localStorage.getItem('starLock') === 'true';
         onClassAdded = localStorage.getItem('onClassAdded') === 'true';
     }
-    //toggleButtons();//按键锁
 };
 
 function uploadFile() {  
@@ -216,14 +215,6 @@ function updateFileName() {
         fileName.innerText = '未选择文件'; // 显示未选择文件的提示  
     }  
 } 
-
-/*function toggleButtons() {
-    const buttons = ['drawButton', 'correctButton', 'incorrectButton', 'manualButton'];
-    const enable = students.length > 0;
-    buttons.forEach(buttonId => {
-        document.getElementById(buttonId).disabled = !enable;
-    });
-}*/
 
 function viewStudentList() {
     window.location.href = 'studentList.html';
